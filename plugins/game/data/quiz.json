@@ -1,0 +1,651 @@
+[
+ {
+  "k": "geografi",
+  "q": "Apa ibu kota Australia?",
+  "o": [
+   "Canberra",
+   "Sydney",
+   "Melbourne",
+   "Perth"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Sungai terpanjang di Indonesia adalah…",
+  "o": [
+   "Sungai Kapuas",
+   "Sungai Musi",
+   "Sungai Mahakam",
+   "Sungai Barito"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Gunung tertinggi di Indonesia adalah…",
+  "o": [
+   "Puncak Jaya",
+   "Gunung Kerinci",
+   "Gunung Rinjani",
+   "Gunung Semeru"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Negara dengan jumlah penduduk terbanyak keempat di dunia adalah…",
+  "o": [
+   "Indonesia",
+   "Brasil",
+   "Pakistan",
+   "Nigeria"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Ibu kota Jepang adalah…",
+  "o": [
+   "Tokyo",
+   "Osaka",
+   "Kyoto",
+   "Nagoya"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Selat yang memisahkan Pulau Jawa dan Sumatra adalah…",
+  "o": [
+   "Selat Sunda",
+   "Selat Bali",
+   "Selat Malaka",
+   "Selat Makassar"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Benua terkecil di dunia adalah…",
+  "o": [
+   "Australia",
+   "Eropa",
+   "Antartika",
+   "Amerika Selatan"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Danau terbesar di Indonesia adalah…",
+  "o": [
+   "Danau Toba",
+   "Danau Poso",
+   "Danau Singkarak",
+   "Danau Sentani"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Gurun terbesar di dunia (non-kutub) adalah…",
+  "o": [
+   "Sahara",
+   "Gobi",
+   "Kalahari",
+   "Arab"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Ibu kota Korea Selatan adalah…",
+  "o": [
+   "Seoul",
+   "Busan",
+   "Incheon",
+   "Daegu"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Negara terkecil di dunia berdasarkan luas wilayah adalah…",
+  "o": [
+   "Vatikan",
+   "Monako",
+   "Nauru",
+   "San Marino"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Samudra terluas di dunia adalah…",
+  "o": [
+   "Pasifik",
+   "Atlantik",
+   "Hindia",
+   "Arktik"
+  ],
+  "a": 0
+ },
+ {
+  "k": "geografi",
+  "q": "Ibu kota Thailand adalah…",
+  "o": [
+   "Bangkok",
+   "Hanoi",
+   "Manila",
+   "Kuala Lumpur"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Planet terdekat dari Matahari adalah…",
+  "o": [
+   "Merkurius",
+   "Venus",
+   "Mars",
+   "Bumi"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Rumus kimia air adalah…",
+  "o": [
+   "H2O",
+   "CO2",
+   "O2",
+   "NaCl"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Gas yang paling banyak di atmosfer Bumi adalah…",
+  "o": [
+   "Nitrogen",
+   "Oksigen",
+   "Karbon dioksida",
+   "Argon"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Organ yang memompa darah ke seluruh tubuh adalah…",
+  "o": [
+   "Jantung",
+   "Paru-paru",
+   "Hati",
+   "Ginjal"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Satuan gaya dalam SI adalah…",
+  "o": [
+   "Newton",
+   "Joule",
+   "Watt",
+   "Pascal"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Planet yang dijuluki planet merah adalah…",
+  "o": [
+   "Mars",
+   "Jupiter",
+   "Saturnus",
+   "Venus"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Proses tumbuhan membuat makanan dengan bantuan cahaya matahari disebut…",
+  "o": [
+   "Fotosintesis",
+   "Respirasi",
+   "Fermentasi",
+   "Transpirasi"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Hewan terbesar di dunia adalah…",
+  "o": [
+   "Paus biru",
+   "Gajah Afrika",
+   "Hiu paus",
+   "Jerapah"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Lambang kimia untuk emas adalah…",
+  "o": [
+   "Au",
+   "Ag",
+   "Fe",
+   "Gd"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Jumlah tulang pada orang dewasa normalnya adalah…",
+  "o": [
+   "206",
+   "186",
+   "226",
+   "256"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Kecepatan cahaya di ruang hampa sekitar…",
+  "o": [
+   "300.000 km/detik",
+   "150.000 km/detik",
+   "30.000 km/detik",
+   "3.000 km/detik"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Planet terbesar di tata surya adalah…",
+  "o": [
+   "Jupiter",
+   "Saturnus",
+   "Neptunus",
+   "Uranus"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Vitamin yang dihasilkan tubuh dengan bantuan sinar matahari adalah…",
+  "o": [
+   "Vitamin D",
+   "Vitamin C",
+   "Vitamin A",
+   "Vitamin K"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Bagian sel yang disebut 'pembangkit tenaga' adalah…",
+  "o": [
+   "Mitokondria",
+   "Ribosom",
+   "Nukleus",
+   "Lisosom"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sains",
+  "q": "Alat untuk mengukur suhu adalah…",
+  "o": [
+   "Termometer",
+   "Barometer",
+   "Higrometer",
+   "Anemometer"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Proklamasi kemerdekaan Indonesia dibacakan pada tanggal…",
+  "o": [
+   "17 Agustus 1945",
+   "1 Juni 1945",
+   "28 Oktober 1928",
+   "10 November 1945"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Presiden pertama Republik Indonesia adalah…",
+  "o": [
+   "Soekarno",
+   "Soeharto",
+   "B.J. Habibie",
+   "Abdurrahman Wahid"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Sumpah Pemuda diikrarkan pada tahun…",
+  "o": [
+   "1928",
+   "1945",
+   "1908",
+   "1966"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Kerajaan Hindu-Buddha yang membangun Candi Borobudur adalah…",
+  "o": [
+   "Syailendra",
+   "Majapahit",
+   "Sriwijaya",
+   "Singasari"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Perang Dunia II berakhir pada tahun…",
+  "o": [
+   "1945",
+   "1939",
+   "1918",
+   "1950"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Hari Kebangkitan Nasional diperingati setiap tanggal…",
+  "o": [
+   "20 Mei",
+   "2 Mei",
+   "17 Agustus",
+   "28 Oktober"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Teks Proklamasi Indonesia diketik oleh…",
+  "o": [
+   "Sayuti Melik",
+   "Fatmawati",
+   "Mohammad Hatta",
+   "Ahmad Soebardjo"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Mahapatih Majapahit yang terkenal dengan Sumpah Palapa adalah…",
+  "o": [
+   "Gajah Mada",
+   "Hayam Wuruk",
+   "Raden Wijaya",
+   "Mpu Prapanca"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Candi Prambanan merupakan candi bercorak…",
+  "o": [
+   "Hindu",
+   "Buddha",
+   "Islam",
+   "Konghucu"
+  ],
+  "a": 0
+ },
+ {
+  "k": "sejarah",
+  "q": "Konferensi Asia Afrika pertama diadakan di kota…",
+  "o": [
+   "Bandung",
+   "Jakarta",
+   "Yogyakarta",
+   "Surabaya"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Alat musik tradisional Jawa Barat yang terbuat dari bambu adalah…",
+  "o": [
+   "Angklung",
+   "Sasando",
+   "Tifa",
+   "Kolintang"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Tarian tradisional dari Bali yang terkenal adalah…",
+  "o": [
+   "Kecak",
+   "Saman",
+   "Piring",
+   "Tor-tor"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Rumah adat Minangkabau disebut…",
+  "o": [
+   "Rumah Gadang",
+   "Joglo",
+   "Tongkonan",
+   "Honai"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Pakaian tradisional Jepang disebut…",
+  "o": [
+   "Kimono",
+   "Hanbok",
+   "Cheongsam",
+   "Sari"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Berapa jumlah sisi pada segi enam?",
+  "o": [
+   "6",
+   "5",
+   "7",
+   "8"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Hasil dari 12 x 12 adalah…",
+  "o": [
+   "144",
+   "124",
+   "122",
+   "164"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Warna campuran biru dan kuning adalah…",
+  "o": [
+   "Hijau",
+   "Ungu",
+   "Oranye",
+   "Cokelat"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Berapa jumlah hari dalam satu tahun kabisat?",
+  "o": [
+   "366",
+   "365",
+   "364",
+   "367"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Olahraga yang menggunakan raket dan kok adalah…",
+  "o": [
+   "Bulu tangkis",
+   "Tenis meja",
+   "Squash",
+   "Golf"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Binatang yang dijuluki raja hutan adalah…",
+  "o": [
+   "Singa",
+   "Harimau",
+   "Gajah",
+   "Beruang"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Mata uang negara Jepang adalah…",
+  "o": [
+   "Yen",
+   "Won",
+   "Yuan",
+   "Ringgit"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Hari raya umat Hindu untuk menyambut tahun baru Saka adalah…",
+  "o": [
+   "Nyepi",
+   "Galungan",
+   "Waisak",
+   "Kuningan"
+  ],
+  "a": 0
+ },
+ {
+  "k": "umum",
+  "q": "Lagu kebangsaan Indonesia adalah…",
+  "o": [
+   "Indonesia Raya",
+   "Garuda Pancasila",
+   "Halo-Halo Bandung",
+   "Rayuan Pulau Kelapa"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Singkatan dari CPU adalah…",
+  "o": [
+   "Central Processing Unit",
+   "Computer Personal Unit",
+   "Central Program Utility",
+   "Core Processing Update"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Bahasa pemrograman yang berjalan di browser web adalah…",
+  "o": [
+   "JavaScript",
+   "Python",
+   "C++",
+   "Swift"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Perusahaan yang membuat sistem operasi Android adalah…",
+  "o": [
+   "Google",
+   "Apple",
+   "Microsoft",
+   "Samsung"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "1 Gigabyte sama dengan sekitar…",
+  "o": [
+   "1.024 Megabyte",
+   "100 Megabyte",
+   "10 Megabyte",
+   "1.000.000 Megabyte"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Singkatan dari URL adalah…",
+  "o": [
+   "Uniform Resource Locator",
+   "Universal Radio Link",
+   "United Resource Line",
+   "User Request Language"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Kode negara internasional untuk Indonesia adalah…",
+  "o": [
+   "+62",
+   "+60",
+   "+65",
+   "+66"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Pendiri Microsoft bersama Paul Allen adalah…",
+  "o": [
+   "Bill Gates",
+   "Steve Jobs",
+   "Mark Zuckerberg",
+   "Elon Musk"
+  ],
+  "a": 0
+ },
+ {
+  "k": "teknologi",
+  "q": "Perangkat untuk menyimpan data yang tidak mempunyai bagian bergerak adalah…",
+  "o": [
+   "SSD",
+   "HDD",
+   "Disket",
+   "CD-ROM"
+  ],
+  "a": 0
+ }
+]

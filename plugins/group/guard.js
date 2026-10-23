@@ -1,0 +1,193 @@
+import { updateGroupSetting, DEFAULT_TOXIC } from '../../lib/wa.js'
+
+// antilink, antitoxic, antispam, antidelete, autoreply, antisticker, antiswgc, antitagsw,
+// antiviewonce, antiedit, notiflevel: pengaturan per grup.
+// Pengecekan pesan-nya ada di lib/wa.js (groupGuard). Supaya bisa menghapus pesan
+// dan mengeluarkan member, akunmu harus admin di grup tersebut.
+
+const get = (jid, type) => global.db.groups?.[jid]?.[type] || {}
+const flag = (v) => (v ? 'ON' : 'OFF')
+const ON = ['on', 'aktif', 'enable']
+const OFF = ['off', 'nonaktif', 'disable', 'mati']
+
+const TITLE = {
+    antilink: 'ANTILINK',
+    antitoxic: 'ANTITOXIC',
+    antispam: 'ANTISPAM',
+    antidelete: 'ANTIDELETE',
+    autoreply: 'AUTOREPLY',
+    antisticker: 'ANTISTICKER',
+    antiswgc: 'ANTISWGC',
+    antitagsw: 'ANTITAGSW',
+    antiviewonce: 'ANTIVIEWONCE',
+    antiedit: 'ANTIEDIT',
+    notiflevel: 'NOTIFLEVEL'
+}
+
+const HELP = {
+    antilink: (p) => `${p}antilink on\n${p}antilink off\n${p}antilink kick  (hapus pesan + keluarkan pengirim, bisa di-toggle)\n${p}antilink all   (blokir semua link, bukan cuma link WhatsApp, bisa di-toggle)`,
+    antitoxic: (p) => `${p}antitoxic on\n${p}antitoxic off\n${p}antitoxic add <kata>\n${p}antitoxic del <kata>\n${p}antitoxic list\n${p}antitoxic reset`,
+    antispam: (p) => `${p}antispam on\n${p}antispam off\n_Lebih dari 5 pesan dalam 6 detik dianggap spam._`,
+    antidelete: (p) => `${p}antidelete on\n${p}antidelete off\n_Pesan yang dihapus member dikirim ulang oleh bot: teks, foto, video, audio, VN, sticker, dan dokumen. Media lebih dari 12MB hanya diteruskan jika masih tersedia._`,
+    antisticker: (p) => `${p}antisticker on\n${p}antisticker off\n${p}antisticker kick  (hapus sticker + keluarkan pengirim, bisa di-toggle)\n_Sticker dari member dihapus. Admin dikecualikan._`,
+    antiswgc: (p) => `${p}antiswgc on\n${p}antiswgc off\n${p}antiswgc kick  (hapus + keluarkan pengirim, bisa di-toggle)\n_Status grup dari member dihapus. Admin dikecualikan._`,
+    antitagsw: (p) => `${p}antitagsw on\n${p}antitagsw off\n${p}antitagsw kick  (hapus + keluarkan pengirim, bisa di-toggle)\n_Pesan "grup ini disebut di status" dihapus. Admin dikecualikan._`,
+    antiedit: (p) => `${p}antiedit on\n${p}antiedit off\n_Pesan teks yang diedit member dikirim ulang oleh bot lengkap dengan teks sebelum dan sesudahnya._`,
+    antiviewonce: (p) => `${p}antiviewonce on\n${p}antiviewonce off\n${p}antiviewonce hapus  (hapus juga pesan aslinya, bisa di-toggle)\n_Foto, video, dan audio sekali lihat dikirim ulang sebagai media biasa._`,
+    notiflevel: (p) => `${p}notiflevel on\n${p}notiflevel off\n_Bot mengirim notifikasi di grup saat member naik level (EXP cukup). Default: mati._`,
+    autoreply: (p) => `${p}autoreply on\n${p}autoreply off\n${p}autoreply add <pemicu> | <balasan>\n${p}autoreply del <pemicu>\n${p}autoreply list`
+}
+
+// fitur yang bisa memakai sistem warn (lihat plugins/group/warn.js)
+const WARNABLE = ['antilink', 'antitoxic', 'antispam', 'antisticker', 'antiswgc', 'antitagsw']
+
+function status(type, p, jid) {
+    const cfg = get(jid, type)
+    const extra = {
+        antilink: `\n┃ ✦ Keluarkan : ${flag(cfg.kick)}\n┃ ✦ Semua link : ${flag(cfg.all)}`,
+        antitoxic: `\n┃ ✦ Daftar kata : ${(cfg.words || DEFAULT_TOXIC).length}${cfg.words ? ' (custom)' : ' (bawaan)'}`,
+        autoreply: `\n┃ ✦ Aturan : ${Object.keys(cfg.rules || {}).length}`,
+        antisticker: `\n┃ ✦ Keluarkan : ${flag(cfg.kick)}`,
+        antiswgc: `\n┃ ✦ Keluarkan : ${flag(cfg.kick)}`,
+        antitagsw: `\n┃ ✦ Keluarkan : ${flag(cfg.kick)}`,
+        antiviewonce: `\n┃ ✦ Hapus asli : ${flag(cfg.del)}`
+    }[type] || ''
+
+    const warnLine = WARNABLE.includes(type) ? `\n┃ ✦ Sistem warn : ${flag(cfg.warn)}` : ''
+    const warnHelp = WARNABLE.includes(type) ? `\n${p}${type} warn  (pelanggar dapat peringatan, dikeluarkan saat mencapai batas ${p}setwarn; menggantikan kick)` : ''
+    return `╭─▣「 *${TITLE[type]}* 」▣─╮\n┃ ✦ Status : *${flag(cfg.on)}*${extra}${warnLine}\n╰─────────────➤\n\n${HELP[type](p)}${warnHelp}`
+}
+
+const FEATURES = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel']
+const ALIAS = {
+    link: 'antilink', toxic: 'antitoxic', spam: 'antispam', delete: 'antidelete', del: 'antidelete', reply: 'autoreply',
+    sticker: 'antisticker', stiker: 'antisticker', antistiker: 'antisticker',
+    swgc: 'antiswgc', statusgrup: 'antiswgc', tagsw: 'antitagsw', tagstatus: 'antitagsw',
+    edit: 'antiedit',
+    levelup: 'notiflevel', naiklevel: 'notiflevel', lvlup: 'notiflevel', notiflvl: 'notiflevel',
+    viewonce: 'antiviewonce', vo: 'antiviewonce', antivo: 'antiviewonce', antiv1: 'antiviewonce', antisekalilihat: 'antiviewonce'
+}
+const pickFeature = (v) => {
+    const k = String(v || '').toLowerCase()
+    return FEATURES.includes(k) ? k : ALIAS[k]
+}
+
+function featureList(p, jid) {
+    const rows = FEATURES.map((f) => `┃ ${get(jid, f).on ? '🟢' : '🔴'} ${f.padEnd(13)} : *${flag(get(jid, f).on)}*`).join('\n')
+    return `╭─▣「 *FITUR GRUP* 」▣─╮\n${rows}\n╰─────────────➤\n\n` +
+        `${p}enable <fitur>  → aktifkan\n${p}disable <fitur> → matikan\n` +
+        `${p}enable all / ${p}disable all → semuanya\n\n` +
+        `Fitur: ${FEATURES.join(', ')}\n_Pengaturan detail: ${p}antilink, ${p}antitoxic, ${p}autoreply, dst._`
+}
+
+async function toggle(command, text, p, jid, reply) {
+    const turnOn = command === 'enable'
+    const arg = (text || '').trim().split(/\s+/)[0].toLowerCase()
+    if (!arg) return reply(featureList(p, jid))
+
+    if (['all', 'semua'].includes(arg)) {
+        for (const f of FEATURES) updateGroupSetting(jid, f, { on: turnOn })
+        return reply(`Semua fitur grup ${turnOn ? 'diaktifkan' : 'dimatikan'}.\n\n${featureList(p, jid)}`)
+    }
+
+    const feature = pickFeature(arg)
+    if (!feature) return reply(`Fitur *${arg}* tidak ada.\n\n${featureList(p, jid)}`)
+    updateGroupSetting(jid, feature, { on: turnOn })
+    return reply(`*${TITLE[feature]}* ${turnOn ? 'diaktifkan' : 'dimatikan'} di grup ini.\n\n${featureList(p, jid)}`)
+}
+
+let handler = async (m, { text, command, prefix, jid, reply }) => {
+    const p = prefix || '.'
+    if (command === 'enable' || command === 'disable') return toggle(command, text, p, jid, reply)
+    const raw = (text || '').trim()
+    const sub = (raw.split(/\s+/)[0] || '').toLowerCase()
+    const value = raw.slice(sub.length).trim()
+    const cfg = get(jid, command)
+    const set = (patch) => updateGroupSetting(jid, command, patch)
+
+    if (ON.includes(sub)) {
+        set({ on: true })
+        return reply(`*${TITLE[command]}* diaktifkan di grup ini.`)
+    }
+    if (OFF.includes(sub)) {
+        set({ on: false })
+        return reply(`*${TITLE[command]}* dimatikan di grup ini.`)
+    }
+
+    if (command === 'antilink' && sub === 'kick') {
+        set({ on: true, kick: !cfg.kick })
+        return reply(`Antilink ${!cfg.kick ? 'akan menghapus pesan dan mengeluarkan pengirim' : 'hanya menghapus pesan'}.`)
+    }
+    if (command === 'antilink' && sub === 'all') {
+        set({ on: true, all: !cfg.all })
+        return reply(`Antilink sekarang memblokir ${!cfg.all ? 'semua link' : 'link WhatsApp saja'}.`)
+    }
+
+    if (WARNABLE.includes(command) && sub === 'warn') {
+        set({ on: true, warn: !cfg.warn })
+        return reply(`${TITLE[command]} ${!cfg.warn ? `memakai sistem warn: pelanggar dapat peringatan dan dikeluarkan setelah ${(global.db.groups?.[jid]?.warn?.limit) || 3}x` : 'tidak lagi memakai sistem warn'}.`)
+    }
+    if (['antisticker', 'antiswgc', 'antitagsw'].includes(command) && sub === 'kick') {
+        set({ on: true, kick: !cfg.kick })
+        return reply(`${TITLE[command]} ${!cfg.kick ? 'akan menghapus pesan dan mengeluarkan pengirim' : 'hanya menghapus pesan'}.`)
+    }
+    if (command === 'antiviewonce' && ['hapus', 'del', 'delete'].includes(sub)) {
+        set({ on: true, del: !cfg.del })
+        return reply(`Antiviewonce ${!cfg.del ? 'juga menghapus pesan aslinya (bot harus admin)' : 'hanya mengirim ulang medianya'}.`)
+    }
+
+    if (command === 'antitoxic') {
+        const words = new Set(cfg.words || DEFAULT_TOXIC)
+        const word = value.toLowerCase()
+        if (sub === 'add' && word) {
+            words.add(word)
+            set({ words: [...words] })
+            return reply(`Kata *${word}* ditambahkan (${words.size} kata).`)
+        }
+        if (sub === 'del' && word) {
+            if (!words.delete(word)) return reply(`Kata *${word}* tidak ada di daftar.`)
+            set({ words: [...words] })
+            return reply(`Kata *${word}* dihapus (${words.size} kata).`)
+        }
+        if (sub === 'list') return reply(`*▢ KATA TERLARANG* (${words.size})\n${[...words].join(', ')}`)
+        if (sub === 'reset') {
+            set({ words: undefined })
+            return reply('Daftar kata dikembalikan ke bawaan.')
+        }
+    }
+
+    if (command === 'autoreply') {
+        const rules = { ...(cfg.rules || {}) }
+        if (sub === 'add') {
+            const [trigger, ...answer] = value.split('|')
+            const key = (trigger || '').trim().toLowerCase()
+            const body = answer.join('|').trim()
+            if (!key || !body) return reply(`Format: ${p}autoreply add <pemicu> | <balasan>\nContoh: ${p}autoreply add p | Assalamualaikum`)
+            rules[key] = body
+            set({ rules })
+            return reply(`Aturan ditambahkan.\n*${key}* → ${body}`)
+        }
+        if (sub === 'del') {
+            const key = value.toLowerCase()
+            if (!(key in rules)) return reply(`Pemicu *${key || '-'}* tidak ada.`)
+            delete rules[key]
+            set({ rules })
+            return reply(`Aturan *${key}* dihapus.`)
+        }
+        if (sub === 'list') {
+            const entries = Object.entries(rules)
+            if (!entries.length) return reply('Belum ada aturan autoreply.')
+            return reply(`*▢ AUTOREPLY* (${entries.length})\n${entries.map(([k, v]) => `-▢ ${k} → ${v}`).join('\n')}`)
+        }
+    }
+
+    return reply(status(command, p, jid))
+}
+
+handler.command = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel', 'enable', 'disable']
+// tetap bisa dipanggil langsung, tapi tidak ditampilkan di menu (cukup .enable / .disable)
+handler.hide = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel']
+handler.tags = ['group']
+handler.group = true
+
+export default handler
