@@ -12,7 +12,7 @@ global.namebot = "Kaguya MD"
 global.nameSaluran = "YannRzy Ch."
 global.idSaluran = "120363333401130891@newsletter"
 global.creator = "@yannrzy"
-global.versi = "1.0.0"
+global.versi = "4.0.0"
 global.paircode = "YANNRZYY"
 
 //——————————[ Platform ]——————————//
