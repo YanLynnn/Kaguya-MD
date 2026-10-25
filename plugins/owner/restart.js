@@ -1,4 +1,6 @@
 import fs from 'fs'
+import os from 'os'
+import path from 'path'
 import { spawn } from 'child_process'
 import { saveDB } from '../../lib/core-system.js'
 import { sleep } from '../../lib/core-system.js'
@@ -6,6 +8,63 @@ import { sleep } from '../../lib/core-system.js'
 // ───────── pengaturan ─────────
 // Tempat menyimpan info "bot barusan di-restart" supaya pesan bisa diedit setelah online lagi.
 const MARKER = './database/restart.json'
+
+// Cek folder bisa ditulis; kalau tidak, coba chmod lalu buat ulang folder (isi lama disimpan di <nama>.old-<waktu>).
+// Ditulis lokal di sini supaya plugin ini tetap jalan walau core-system.js belum diperbarui.
+function ensureWritableDir(dir) {
+    const ok = () => {
+        try {
+            fs.mkdirSync(dir, { recursive: true })
+            const probe = path.join(dir, `.w${process.pid}`)
+            fs.writeFileSync(probe, '1')
+            fs.unlinkSync(probe)
+            return true
+        } catch { return false }
+    }
+    if (ok()) return true
+    try { fs.chmodSync(dir, 0o777) } catch {}
+    if (ok()) return true
+    try {
+        const backup = `${dir}.old-${Date.now()}`
+        fs.renameSync(dir, backup)
+        fs.mkdirSync(dir, { recursive: true })
+        for (const f of fs.readdirSync(backup)) {
+            try { fs.cpSync(path.join(backup, f), path.join(dir, f), { recursive: true }) } catch {}
+        }
+        return ok()
+    } catch { return false }
+}
+
+// Cadangan kalau folder database tidak bisa ditulis (dipakai bersama MARKER).
+const MARKER_FALLBACK = path.join(os.tmpdir(), 'kaguya-restart.json')
+
+// Tulis info restart; kalau folder database ditolak, pakai folder sementara.
+function writeMarker(info) {
+    const json = JSON.stringify(info)
+    try {
+        ensureWritableDir('./database')
+        fs.writeFileSync(MARKER, json)
+        return
+    } catch (e) {
+        console.error('[RESTART] Marker di database gagal, pakai folder sementara:', e.message)
+    }
+    try { fs.writeFileSync(MARKER_FALLBACK, json) } catch (e) {
+        // tetap lanjut restart; hanya pesan "online lagi" yang tidak akan diedit
+        console.error('[RESTART] Marker cadangan juga gagal:', e.message)
+    }
+}
+
+// Baca marker dari lokasi utama, lalu cadangan.
+function readMarker() {
+    for (const file of [MARKER, MARKER_FALLBACK]) {
+        try {
+            const info = JSON.parse(fs.readFileSync(file, 'utf8'))
+            try { fs.unlinkSync(file) } catch {}
+            return info
+        } catch {}
+    }
+    return null
+}
 
 // Info restart yang lebih tua dari ini dianggap basi dan diabaikan.
 const MARKER_TTL = 5 * 60 * 1000
@@ -102,10 +161,7 @@ async function announceOnline(info, previous = null) {
 // ───────── setelah bot menyala dari restart ─────────
 // Dijalankan saat plugin dimuat: kalau ada info restart yang masih baru, kabari chat pemicunya.
 ;(function resumeAfterRestart() {
-    let info
-    try { info = JSON.parse(fs.readFileSync(MARKER, 'utf8')) } catch { return }
-    try { fs.unlinkSync(MARKER) } catch {}
-
+    const info = readMarker()
     if (!info || !info.jid || Date.now() - info.at > MARKER_TTL) return
     if (info.id) global.__restartHandled.add(info.id)
 
@@ -137,8 +193,7 @@ let handler = async (m, { sock, jid, text, reply, example }) => {
             return
         }
 
-        fs.mkdirSync('./database', { recursive: true })
-        fs.writeFileSync(MARKER, JSON.stringify(info))
+        writeMarker(info)
         try { saveDB(global.db) } catch {}
 
         await sleep(FLUSH_DELAY)
@@ -146,6 +201,7 @@ let handler = async (m, { sock, jid, text, reply, example }) => {
     } catch (e) {
         restarting = false
         try { fs.unlinkSync(MARKER) } catch {}
+        try { fs.unlinkSync(MARKER_FALLBACK) } catch {}
         console.error('[RESTART]', e)
         await sock.sendMessage(jid, { text: `Gagal restart: ${e.message}`, ...(sent?.key ? { edit: sent.key } : {}) }).catch(() => null)
     }

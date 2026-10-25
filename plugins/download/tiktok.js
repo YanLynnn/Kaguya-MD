@@ -58,7 +58,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     return m.reply(
       `Contoh:\n` +
       `${usedPrefix + command} https://vt.tiktok.com/xxxx\n` +
-      `${usedPrefix + command} elaina edit`
+      `${usedPrefix + command} kaguya edit`
     )
   }
 
@@ -143,7 +143,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
 handler.help = ['tt', 'tiktok']
 handler.tags = ['downloader']
-handler.command = ['tiktok']
+handler.command = ['tt', 'tiktok']
 handler.limit = true
 handler.register = false
 

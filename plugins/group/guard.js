@@ -1,4 +1,4 @@
-import { updateGroupSetting, DEFAULT_TOXIC } from '../../lib/wa.js'
+import { updateGroupSetting, DEFAULT_TOXIC, getMeta, botIsAdmin } from '../../lib/wa.js'
 
 // antilink, antitoxic, antispam, antidelete, autoreply, antisticker, antiswgc, antitagsw,
 // antiviewonce, antiedit, notiflevel: pengaturan per grup.
@@ -9,6 +9,7 @@ const get = (jid, type) => global.db.groups?.[jid]?.[type] || {}
 const flag = (v) => (v ? 'ON' : 'OFF')
 const ON = ['on', 'aktif', 'enable']
 const OFF = ['off', 'nonaktif', 'disable', 'mati']
+const TEST_MS = 10 * 60_000 // lama mode tes
 
 const TITLE = {
     antilink: 'ANTILINK',
@@ -25,7 +26,7 @@ const TITLE = {
 }
 
 const HELP = {
-    antilink: (p) => `${p}antilink on\n${p}antilink off\n${p}antilink kick  (hapus pesan + keluarkan pengirim, bisa di-toggle)\n${p}antilink all   (blokir semua link, bukan cuma link WhatsApp, bisa di-toggle)`,
+    antilink: (p) => `${p}antilink on\n${p}antilink off\n${p}antilink kick  (hapus pesan + keluarkan pengirim, bisa di-toggle)\n${p}antilink all   (blokir semua jenis link, termasuk www. dan domain tanpa http, bisa di-toggle)\n_Bawaan memblokir semua link berawalan https:// (dan http://) serta link grup / channel WhatsApp. Untuk menangkap juga www. dan domain tanpa http (domain.com) aktifkan ${p}antilink all._`,
     antitoxic: (p) => `${p}antitoxic on\n${p}antitoxic off\n${p}antitoxic add <kata>\n${p}antitoxic del <kata>\n${p}antitoxic list\n${p}antitoxic reset`,
     antispam: (p) => `${p}antispam on\n${p}antispam off\n_Lebih dari 5 pesan dalam 6 detik dianggap spam._`,
     antidelete: (p) => `${p}antidelete on\n${p}antidelete off\n_Pesan yang dihapus member dikirim ulang oleh bot: teks, foto, video, audio, VN, sticker, dan dokumen. Media lebih dari 12MB hanya diteruskan jika masih tersedia._`,
@@ -80,25 +81,63 @@ function featureList(p, jid) {
         `Fitur: ${FEATURES.join(', ')}\n_Pengaturan detail: ${p}antilink, ${p}antitoxic, ${p}autoreply, dst._`
 }
 
-async function toggle(command, text, p, jid, reply) {
+// catatan di bawah daftar fitur: bot admin atau belum, dan siapa yang dikecualikan
+async function guardNotes(sock, p, jid) {
+    const lines = []
+    try {
+        const meta = await getMeta(sock, jid, true)
+        if (!botIsAdmin(sock, meta)) lines.push('⚠️ *Bot belum jadi admin grup*, jadi pesan tidak bisa dihapus dan member tidak bisa dikeluarkan. Jadikan bot admin dulu.')
+    } catch {}
+    lines.push(`ℹ️ Owner dan admin grup *dikecualikan* dari semua penjaga. Untuk mencoba dengan akunmu sendiri ketik ${p}guardtest on (10 menit).`)
+    return `\n\n${lines.join('\n')}`
+}
+
+async function toggle(sock, command, text, p, jid, reply) {
     const turnOn = command === 'enable'
     const arg = (text || '').trim().split(/\s+/)[0].toLowerCase()
     if (!arg) return reply(featureList(p, jid))
 
     if (['all', 'semua'].includes(arg)) {
         for (const f of FEATURES) updateGroupSetting(jid, f, { on: turnOn })
-        return reply(`Semua fitur grup ${turnOn ? 'diaktifkan' : 'dimatikan'}.\n\n${featureList(p, jid)}`)
+        return reply(`Semua fitur grup ${turnOn ? 'diaktifkan' : 'dimatikan'}.\n\n${featureList(p, jid)}${turnOn ? await guardNotes(sock, p, jid) : ''}`)
     }
 
     const feature = pickFeature(arg)
     if (!feature) return reply(`Fitur *${arg}* tidak ada.\n\n${featureList(p, jid)}`)
     updateGroupSetting(jid, feature, { on: turnOn })
-    return reply(`*${TITLE[feature]}* ${turnOn ? 'diaktifkan' : 'dimatikan'} di grup ini.\n\n${featureList(p, jid)}`)
+    return reply(`*${TITLE[feature]}* ${turnOn ? 'diaktifkan' : 'dimatikan'} di grup ini.\n\n${featureList(p, jid)}${turnOn ? await guardNotes(sock, p, jid) : ''}`)
 }
 
-let handler = async (m, { text, command, prefix, jid, reply }) => {
+let handler = async (m, { sock, text, command, prefix, jid, reply }) => {
     const p = prefix || '.'
-    if (command === 'enable' || command === 'disable') return toggle(command, text, p, jid, reply)
+    if (command === 'enable' || command === 'disable') return toggle(sock, command, text, p, jid, reply)
+
+    // .guardtest [on|off] — coba penjaga dengan akun owner / admin
+    if (command === 'guardtest') {
+        const arg = (text || '').trim().split(/\s+/)[0].toLowerCase()
+        const until = Number(global.db.groups?.[jid]?.guardtest?.until) || 0
+        if (ON.includes(arg)) {
+            updateGroupSetting(jid, 'guardtest', { until: Date.now() + TEST_MS })
+            const active = FEATURES.filter(f => get(jid, f).on)
+            return reply(
+                `🧪 *MODE TES AKTIF* (${TEST_MS / 60_000} menit)\n\n` +
+                `Owner dan admin sekarang ikut diperiksa. Pelanggar hanya dihapus pesannya dan ditegur (tanpa kick / warn).\n\n` +
+                `Fitur aktif: ${active.length ? active.join(', ') : '-'}\n` +
+                `Coba kirim: kata kasar, stiker, atau link (sesuai fitur yang aktif).\n\nMatikan: ${p}guardtest off` +
+                (await guardNotes(sock, p, jid))
+            )
+        }
+        if (OFF.includes(arg)) {
+            updateGroupSetting(jid, 'guardtest', { until: undefined })
+            return reply('🧪 Mode tes dimatikan. Owner dan admin kembali dikecualikan.')
+        }
+        return reply(
+            `🧪 *MODE TES*: ${until > Date.now() ? `aktif, sisa ${Math.ceil((until - Date.now()) / 60_000)} menit` : 'mati'}\n\n` +
+            `${p}guardtest on  → owner & admin ikut diperiksa selama ${TEST_MS / 60_000} menit\n${p}guardtest off` +
+            (await guardNotes(sock, p, jid))
+        )
+    }
+
     const raw = (text || '').trim()
     const sub = (raw.split(/\s+/)[0] || '').toLowerCase()
     const value = raw.slice(sub.length).trim()
@@ -184,10 +223,12 @@ let handler = async (m, { text, command, prefix, jid, reply }) => {
     return reply(status(command, p, jid))
 }
 
-handler.command = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel', 'enable', 'disable']
+handler.command = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel', 'enable', 'disable', 'guardtest']
 // tetap bisa dipanggil langsung, tapi tidak ditampilkan di menu (cukup .enable / .disable)
-handler.hide = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel']
+handler.hide = ['antilink', 'antitoxic', 'antispam', 'antidelete', 'autoreply', 'antisticker', 'antiswgc', 'antitagsw', 'antiviewonce', 'antiedit', 'notiflevel', 'guardtest']
 handler.tags = ['group']
 handler.group = true
+// pengaturan penjaga hanya untuk admin grup (owner otomatis lolos)
+handler.admin = true
 
 export default handler

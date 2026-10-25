@@ -97,7 +97,7 @@ function findLogic(src) {
 
 let handler = async (m, { text, prefix, reply }) => {
     let name = String(text || '').trim().split(/\s+/)[0].toLowerCase()
-    if (!name) return reply(`*▢ CEK LOKASI FITUR*\n\nContoh:\n${prefix}cekfitur menu\n${prefix}cekfitur sticker`)
+    if (!name) return reply(`*🍧 CEK LOKASI FITUR*\n\nContoh:\n${prefix}cekfitur menu\n${prefix}cekfitur sticker`)
 
     // buang prefix kalau owner mengetik ".menu"
     for (const p of getPrefixes().filter(Boolean).sort((a, b) => b.length - a.length)) {
@@ -107,7 +107,7 @@ let handler = async (m, { text, prefix, reply }) => {
     const { hits, similar } = findPlugins(name)
     if (!hits.length) {
         return reply(
-            `❌ Fitur *${name}* tidak ditemukan.` +
+            `🍓 Fitur *${name}* tidak ditemukan.` +
             (similar.length ? `\n\nMungkin maksudmu:\n${similar.map(c => `• ${c}`).join('\n')}` : '')
         )
     }
@@ -126,14 +126,14 @@ let handler = async (m, { text, prefix, reply }) => {
             `-▢  *command:* ${cmds.join(', ')}`,
             `-▢  *kategori:* ${tags}`
         ]
-        if (flags.length) lines.push(`-▢  *syarat:* ${flags.join(', ')}`)
-        if (merged) lines.push('-▢  *tipe:* plugin gabungan (mergePlugins)')
-        if (logic) lines.push(`-▢  *logika:* ${logic.file}${logic.line ? ` (baris ${logic.line})` : ''} → ${logic.id}`)
-        if (!src) lines.push('-▢  _file sumber tidak terbaca di disk_')
+        if (flags.length) lines.push(`🍧  *syarat:* ${flags.join(', ')}`)
+        if (merged) lines.push('🍧  *tipe:* plugin gabungan (mergePlugins)')
+        if (logic) lines.push(`🍧  *logika:* ${logic.file}${logic.line ? ` (baris ${logic.line})` : ''} → ${logic.id}`)
+        if (!src) lines.push('🍧  _file sumber tidak terbaca di disk_')
         return lines.join('\n')
     })
 
-    return reply(`*▢ LOKASI FITUR: ${name}*\n\n${out.join('\n\n')}`)
+    return reply(`*🍧 LOKASI FITUR: ${name}*\n\n${out.join('\n\n')}`)
 }
 
 handler.command = ['cekfitur', 'carifitur']

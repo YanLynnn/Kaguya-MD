@@ -95,7 +95,7 @@ let handler = async (m, { conn, text }) => {
 
 handler.help = ['facebook <link>'];
 handler.tags = ['downloader'];
-handler.command = ['facebook']
+handler.command = ['facebook', 'fb']
 handler.limit = true;
 
 const __plugin = wrapClassic(handler)

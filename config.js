@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url'
 // Edit lalu simpan bot hot-reload otomatis
 
 //——————————[ Identitas ]——————————//
-global.owners = ["6285956337454", "6285137450695"]
+global.owners = [""] //no owner, atau lewat wizard console
 global.ownername = 'YannRzy Tech'
-global.nomorbot = '6285956337454'
+global.nomorbot = '' //no bot, atau lewat wizard console
 global.namebot = "Kaguya MD"
 global.nameSaluran = "YannRzy Ch."
 global.idSaluran = "120363333401130891@newsletter"
@@ -19,26 +19,14 @@ global.paircode = "YANNRZYY"
 // Bisa ditimpa: node index.js --wa | --tg | --both
 global.platforms = {
     whatsapp: true,
-    telegram: true      // otomatis dilewati kalau token kosong
+    telegram: false      // otomatis dilewati kalau token kosong
 }
 
 //——————————[ Mode Bot ]——————————//
-global.public = false   // true = semua orang bisa pakai | false = hanya owner
+global.public = true   // true = semua orang bisa pakai | false = hanya owner
 global.pconly = false   // true = hanya layani private chat
 global.gconly = false   // true = hanya layani grup (jangan aktif bersamaan dengan pconly)
 global.anticall = "off" // off | tolak | block
-
-//——————————[ Sewa Bot ]——————————//
-global.sewamode = false        // true = grup wajib sewa untuk memakai bot
-global.sewaAutoLeave = false   // true = bot keluar otomatis saat sewa habis
-// hari: null = permanen | id dipakai di command, contoh: .sewa bulanan
-global.sewaPlans = [
-    { id: "harian", nama: "1 Hari", hari: 1, harga: 2000 },
-    { id: "mingguan", nama: "7 Hari", hari: 7, harga: 10000 },
-    { id: "bulanan", nama: "30 Hari", hari: 30, harga: 25000 },
-    { id: "3bulan", nama: "90 Hari", hari: 90, harga: 60000 },
-    { id: "permanen", nama: "Permanen", hari: null, harga: 100000 }
-]
 
 //——————————[ QRIS ]——————————//
 // Dipakai .qris, .beli, dan sewa. Salin utuh dari 000201 sampai akhir.
@@ -83,27 +71,14 @@ global.telegram = {
     registerCommands: true     // daftarkan /menu, /myid, /ping
 }
 
-//——————————[ Optimizer (VPS/panel kecil) ]——————————//
-global.optimizer = {
-    maxMsgAgeSec: 60,          // pesan lebih lama dari ini dilewati
-    maxPendingPerChat: 3,      // maks pesan diproses bersamaan per chat
-    memSoftRatio: 0.70,        // heap > 70% → bersihkan cache ringan
-    memHardRatio: 0.85,        // heap > 85% → bersihkan semua cache
-    rssHardRatio: 0.65,        // RAM server > 65% → bersihkan semua cache
-    quiet: false               // true = sembunyikan log RAM/WATCHDOG
-}
+//——————————[ RPG & Prefix ]——————————//
+global.multiplier = 38     // makin besar, makin berat naik level
+global.prefix = ["", ".", "!", ","]
 
-//——————————[ Anti-Ban ]——————————//
-// Makin besar jeda, makin aman tapi makin lambat.
-global.antiban = {
-    minDelayMs: 1200,          // jeda minimum antar pesan
-    maxDelayMs: 3200,          // jeda maksimum (acak min–max)
-    perMinute: 20,             // maks pesan keluar per menit
-    perChatPerMinute: 10       // maks pesan keluar per menit ke satu chat
-}
+// Update script via .updatebot (opsional, isi link zip)
+// global.updateUrl = ""
+// global.updateToken = ""   // token GitHub jika repo private
 
-//——————————[ Fitur Kaguya ]——————————//
-// Nilai yang dihapus memakai default di lib/plugin-engine.js
 global.extra = {
     // Hadiah ×pengali pada jam-jam ini (WIB). Manual: .jambahagia on 60 / off
     jamBahagia: { on: true, jam: [[12, 13], [19, 21]], pengali: 2 },
@@ -130,23 +105,36 @@ global.extra = {
     kuis: { hadiah: { money: 500, exp: 300 }, waktuDetik: 30 }
 }
 
-//——————————[ RPG & Prefix ]——————————//
-global.multiplier = 38     // makin besar, makin berat naik level
-global.prefix = ["", ".", "!", ","]
-
-// Update script via .updatebot (opsional, isi link zip)
-// global.updateUrl = ""
-// global.updateToken = ""   // token GitHub jika repo private
-
-//——————————[ Pesan Bot ]——————————//
-global.mess = {
-    wait: "🧃 Tunggu sebentar ya, lagi aku urus dulu...",
-    owner: "🍅 Khusus owner. Yang ini nggak bisa aku bukain~",
-    admin: "🍋 Khusus admin. Nanti aku kena omel kalau nekat!",
-    premium: "🍰 Yang ini khusus premium. Menarik sih, tapi belum bisa~",
-    group: "🍡 Fitur ini cuma jalan di dalam grup ya!",
-    private: "🍡 Fitur ini cuma bisa dipakai di private chat ya!"
+//——————————[ Optimizer (VPS/panel kecil) ]——————————//
+global.optimizer = {
+    maxMsgAgeSec: 60,          // pesan lebih lama dari ini dilewati
+    maxPendingPerChat: 3,      // maks pesan diproses bersamaan per chat
+    memSoftRatio: 0.70,        // heap > 70% → bersihkan cache ringan
+    memHardRatio: 0.85,        // heap > 85% → bersihkan semua cache
+    rssHardRatio: 0.65,        // RAM server > 65% → bersihkan semua cache
+    quiet: false               // true = sembunyikan log RAM/WATCHDOG
 }
+
+//——————————[ Anti-Ban ]——————————//
+// Makin besar jeda, makin aman tapi makin lambat.
+global.antiban = {
+    minDelayMs: 1200,          // jeda minimum antar pesan
+    maxDelayMs: 3200,          // jeda maksimum (acak min–max)
+    perMinute: 20,             // maks pesan keluar per menit
+    perChatPerMinute: 10       // maks pesan keluar per menit ke satu chat
+}
+
+//——————————[ Sewa Bot ]——————————//
+global.sewamode = false        // true = grup wajib sewa untuk memakai bot
+global.sewaAutoLeave = false   // true = bot keluar otomatis saat sewa habis
+// hari: null = permanen | id dipakai di command, contoh: .sewa bulanan
+global.sewaPlans = [
+    { id: "harian", nama: "1 Hari", hari: 1, harga: 2000 },
+    { id: "mingguan", nama: "7 Hari", hari: 7, harga: 10000 },
+    { id: "bulanan", nama: "30 Hari", hari: 30, harga: 25000 },
+    { id: "3bulan", nama: "90 Hari", hari: 90, harga: 60000 },
+    { id: "permanen", nama: "Permanen", hari: null, harga: 100000 }
+]
 
 //——————————[ Panel Pterodactyl ]——————————//
 // Command: .kaguyapanel
@@ -211,12 +199,7 @@ global.panel = {
 }
 
 //——————————[ Fitur Tambahan ]——————————//
-// Cek status semua fitur: .fitur (owner)
-// on: true/false = nyalakan/matikan | waktu pakai jam WIB
-// hadiah: { money, exp, limit, <item RPG apa pun> }
-// kirimKe: "owner" | "chat" | ["jid1", "jid2"]
 global.fitur = {
-
     // ── Hadiah harian/mingguan/bulanan + streak ──
     // Command: .harian .claim .mingguan .weekly .bulanan
     reward: {
@@ -240,9 +223,6 @@ global.fitur = {
     },
 
     // ── Event shop ── (.eventshop, .eventbuy)
-    // hari: berulang tiap minggu | mulai/selesai: rentang tanggal (jika keduanya diisi, harus cocok semua)
-    // diskon: % untuk item di "item" ("semua" = semua)
-    // barang: harga, stok (0 = tak terbatas), batasPerUser (0 = tak terbatas), beri = item yang didapat
     eventShop: {
         on: true,
         events: [
@@ -257,7 +237,6 @@ global.fitur = {
     },
 
     // ── Leaderboard mingguan berhadiah ──
-    // mode: "naik" = kenaikan nilai seminggu | "total" = nilai total
     lbMingguan: {
         on: true,
         mode: "naik",
@@ -274,7 +253,6 @@ global.fitur = {
     },
 
     // ── Marketplace antar user ──
-    // .market  .mjual item jumlah harga  .mbeli id [jumlah]  .mtarik id  .mku
     marketplace: {
         on: true,
         pajakPersen: 5,                    // potongan dari hasil jual
@@ -287,7 +265,6 @@ global.fitur = {
     },
 
     // ── Clan & clan war ──
-    // .clan buat/gabung/keluar/info/list/top/donasi/kick/war/terima/tolak
     clan: {
         on: true,
         wajibGuild: true,                  // harus ikut .guild dulu
@@ -306,7 +283,6 @@ global.fitur = {
     },
 
     // ── Anti-delete / anti-edit / anti-viewonce (berlaku global) ──
-    // Pengaturan per grup lewat .antidelete tetap jalan.
     antidelete: {
         on: false, grup: true, pribadi: true, kirimKe: "owner",
         media: true,                       // simpan foto/video/vn agar bisa dikirim ulang
@@ -342,6 +318,16 @@ global.fitur = {
         balas: false,                      // true = beri tahu user (maks 1x / 6 jam)
         pesan: "Kamu masuk blacklist bot ini."
     }
+}
+
+//——————————[ Pesan Bot ]——————————//
+global.mess = {
+    wait: "🧃 Tunggu sebentar ya, lagi aku urus dulu...",
+    owner: "🍅 Khusus owner. Yang ini nggak bisa aku bukain~",
+    admin: "🍋 Khusus admin. Nanti aku kena omel kalau nekat!",
+    premium: "🍰 Yang ini khusus premium. Menarik sih, tapi belum bisa~",
+    group: "🍡 Fitur ini cuma jalan di dalam grup ya!",
+    private: "🍡 Fitur ini cuma bisa dipakai di private chat ya!"
 }
 
 global.stickerPack = {

@@ -14,14 +14,7 @@
 * All Rights Reserved.
   */
 
-// ╔══════════════ [ PENJELASAN FILE ] ══════════════╗
-// Pemroses semua pesan masuk (WhatsApp & Telegram).
-// Urutan: abaikan pesan bot sendiri/duplikat -> cek owner -> mode sewa -> penjaga grup
-// -> mode self/public, ban, blacklist -> AFK -> cari plugin sesuai command -> cek syarat
-// (owner/premium/admin/grup/limit) -> jalankan plugin -> catat statistik.
-// ╚═════════════════════════════════════════════════╝
-  
-  
+
 import chalk from 'chalk'
 import { cekLimit, initPlugins, matchPlugin, sendExample, parseCommand, primaryPrefix, runPassivePlugins, afkCheck } from './lib/plugin-engine.js'
 import { fiturWatch, fiturLog, fiturBlacklisted } from './lib/plugin-features.js'

@@ -2,8 +2,24 @@ import { rbRun, rbRegister } from '../../lib/plugin-engine.js'
 
 // ───────── logika fitur (sebelumnya di lib/) ─────────
 const feature = async ({ rbG, rbLib }) => {
-  const { spawn } = (await import('child_process'))
+  const { spawn, spawnSync } = (await import('child_process'))
   const AdmZip = (__m => __m.default ?? __m)((await import('adm-zip')))
+
+  // Nama binary CLI AI agent. Bisa diganti lewat config.js -> global.agyBin = "nama-binary-asli"
+  const AGY_BIN = global.agyBin || "agy"
+
+  let agyAvailable = null
+  function checkAgyAvailable() {
+    if (agyAvailable !== null) return agyAvailable
+    try {
+      const isWin = process.platform === "win32"
+      const check = spawnSync(isWin ? "where" : "which", [AGY_BIN])
+      agyAvailable = check.status === 0
+    } catch {
+      agyAvailable = false
+    }
+    return agyAvailable
+  }
 
   function validateJsSyntax(code) {
   	return new Promise((resolve) => {
@@ -33,6 +49,16 @@ const feature = async ({ rbG, rbLib }) => {
   			isOwner
   				? "Iya sayangku tercinta? Mau Bot Mecha Maiden buatin fitur bot atau modul Baileys apa nih cintaku? 💕✨\nSabit Bot siap tebas semua error buat Ayang~\n\nContoh:\n" + usedPrefix + command + " buatin fitur broadcast kontak dengan Baileys\n" + usedPrefix + command + " buat plugin downloader tiktok --js\n" + usedPrefix + command + " buat sistem rpg --zip"
   				: "Halo Kak! Mau minta Bot The Aspirants buatkan kode apa nih?\n\nContoh penggunaan:\n" + usedPrefix + command + " buatkan plugin tebak gambar untuk bot wa"
+  		);
+  	}
+
+  	if (!checkAgyAvailable()) {
+  		await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+  		return reply(
+  			"Aduh maaf ya " + (isOwner ? "sayang" : "kak") + ", sistem AI code-generator (" + AGY_BIN + ") belum terpasang di server Bot nih. 🥺\n\n" +
+  			"Owner perlu install CLI-nya dulu di server, lalu set nama binary-nya lewat config.js:\n" +
+  			"global.agyBin = \"nama-binary-asli\"\n\n" +
+  			"kalau nama binary sudah sama persis dengan yang terinstall (cek lewat `which " + AGY_BIN + "` di terminal server), fitur ini otomatis aktif lagi."
   		);
   	}
 
@@ -88,13 +114,20 @@ const feature = async ({ rbG, rbLib }) => {
 
   		const runAgy = async (promptInput) => {
   			return await new Promise((resolve, reject) => {
-  				const child = spawn("agy", ["-p", promptInput, "--effort", "low", "--dangerously-skip-permissions"]);
+  				const child = spawn(AGY_BIN, ["-p", promptInput, "--effort", "low", "--dangerously-skip-permissions"]);
   				let output = "";
   				let errorOutput = "";
 
   				child.stdout.on("data", (data) => { output += data.toString(); });
   				child.stderr.on("data", (data) => { errorOutput += data.toString(); });
-  				child.on("error", (err) => { reject(err); });
+  				child.on("error", (err) => {
+  					if (err.code === "ENOENT") {
+  						agyAvailable = false
+  						reject(new Error("CLI '" + AGY_BIN + "' tidak ditemukan di server. Pastikan sudah terinstall dan namanya cocok dengan global.agyBin di config.js."))
+  					} else {
+  						reject(err)
+  					}
+  				});
   				child.on("close", (code) => {
   					if (code === 0 && output.trim()) {
   						resolve(output.trim());

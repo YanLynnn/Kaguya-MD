@@ -14,15 +14,6 @@
 * All Rights Reserved.
   */
 
-// ╔══════════════ [ PENJELASAN FILE ] ══════════════╗
-// Titik masuk bot (node index.js).
-// 1) Tampilan terminal: banner, log loading, QR, dan input setup (nomor owner, pairing/QR).
-// 2) startBot(): membuat koneksi WhatsApp, simpan sesi di folder session/, lalu
-//    reconnect otomatis (backoff) + watchdog kalau koneksi macet.
-// 3) Saat koneksi "open": reminder, sewa, auto follow saluran.
-// 4) startTelegramPlatform(): menjalankan bot Telegram kalau token diisi.
-// ╚═════════════════════════════════════════════════╝
-
 
 import './config.js'
 
